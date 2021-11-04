@@ -1,0 +1,81 @@
+name: run
+
+on:
+  workflow_dispatch:
+    inputs:
+      UNTIL:
+        description: 'block num to run until'
+        required: false
+        default: ''
+  
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: data
+    - name: Clone Neo Node
+      uses: actions/checkout@v2
+      with:
+        repository: neo-project/neo-node
+        ref: v3.0.3
+        path: .node
+    - name: Clone Neo Modules
+      uses: actions/checkout@v2
+      with:
+        repository: neo-project/neo-modules
+        ref: v3.0.3
+        path: .modules
+    - name: Clone Neoburger Maintainer
+      uses: actions/checkout@v2
+      with:
+        repository: neoburger/maintainer
+        ref: main
+        path: .maintainer
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Setup Go environment
+      uses: actions/setup-go@v2.1.4
+    - name: Install Libraries
+      run: sudo apt-get install -y libleveldb-dev sqlite3 libsqlite3-dev libunwind8-dev
+    - name: Restore Neo Node
+      run: cd .node/neo-cli && dotnet restore
+    - name: Restore Neo Modules
+      run: cd .modules/src/LevelDBStore && dotnet restore
+    - name: Restore Neoburger Maintainer
+      run: cd .maintainer && dotnet restore
+    - name: Build Neo Node
+      run: cd .node/neo-cli && dotnet publish -c Release
+    - name: Build Neo Modules
+      run: cd .modules/src/LevelDBStore && dotnet publish -c Release
+    - name: Build Neoburger Maintainer
+      run: |
+        cd .maintainer 
+        dotnet publish -c Release
+    - name: Install Plugins
+      run: |
+        mkdir -p .node/neo-cli/bin/Release/net5.0/Plugins
+        cp .modules/src/LevelDBStore/bin/Release/net5.0/LevelDBStore.dll .node/neo-cli/bin/Release/net5.0/Plugins/
+        cp .maintainer/status/bin/Release/net5.0/status.dll .node/neo-cli/bin/Release/net5.0/Plugins/
+    - name: Run
+      env:
+        AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
+        UNTIL: ${{ github.event.inputs.UNTIL }}
+        NEONODE: './.node/neo-cli/bin/Release/net5.0/neo-cli'
+      run: |
+        go get github.com/Azure/azure-storage-blob-go/azblob
+        go run app.go
+    - name: Save
+      run: |
+        git config --global user.email "neoburger@neoburger.io"
+        git config --global user.name "neoburger"
+        git add .
+        git commit -m release
+        git push
