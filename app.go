@@ -47,7 +47,7 @@ func main() {
         log.Fatalln(err)
     }
     if len(os.Getenv("UNTIL")) == 0 {
-        resp, err := http.Post("http://seed2.neo.org:10332", "application/json", strings.NewReader(`{"jsonrpc":"2.0","method":"getblockcount","params":[],"id":1}`))
+        resp, err := http.Post("https://n3seed2.ngd.network:10332", "application/json", strings.NewReader(`{"jsonrpc":"2.0","method":"getblockcount","params":[],"id":1}`))
         if err != nil {
             log.Fatalln(err)
         }
