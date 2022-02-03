@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: data
+        ref: data-tmp
     - name: Clone Neo Node
       uses: actions/checkout@v2
       with:
