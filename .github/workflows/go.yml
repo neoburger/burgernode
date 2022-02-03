@@ -63,15 +63,15 @@ jobs:
         dotnet publish -c Release -r linux-x64 --self-contained true
     - name: Install Plugins
       run: |
-        mkdir -p .node/neo-cli/bin/Release/net6.0/Plugins
-        cp .modules/src/LevelDBStore/bin/Release/net6.0/LevelDBStore.dll .node/neo-cli/bin/Release/net6.0/Plugins/
-        cp .maintainer/status/bin/Release/net6.0/status.dll .node/neo-cli/bin/Release/net6.0/Plugins/
+        mkdir -p .node/neo-cli/bin/Release/net6.0/linux-x64/Plugins
+        cp .modules/src/LevelDBStore/bin/Release/net6.0/linux-x64/LevelDBStore.dll .node/neo-cli/bin/Release/net6.0/linux-x64/Plugins/
+        cp .maintainer/status/bin/Release/net6.0/linux-x64/status.dll .node/neo-cli/bin/Release/net6.0/linux-x64/Plugins/
     - name: Run
       env:
         AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
         AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
         UNTIL: ${{ github.event.inputs.UNTIL }}
-        NEONODE: './.node/neo-cli/bin/Release/net6.0/neo-cli'
+        NEONODE: './.node/neo-cli/bin/Release/net6.0/linux-x64/neo-cli'
       run: |
         go get github.com/Azure/azure-storage-blob-go/azblob
         go run app.go
