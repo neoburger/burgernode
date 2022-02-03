@@ -24,13 +24,13 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: neo-project/neo-node
-        ref: v3.0.3
+        ref: v3.1.0
         path: .node
     - name: Clone Neo Modules
       uses: actions/checkout@v2
       with:
         repository: neo-project/neo-modules
-        ref: v3.0.3
+        ref: v3.1.0
         path: .modules
     - name: Clone Neoburger Maintainer
       uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Setup Go environment
       uses: actions/setup-go@v2.1.4
     - name: Install Libraries
@@ -62,15 +62,15 @@ jobs:
         dotnet publish -c Release
     - name: Install Plugins
       run: |
-        mkdir -p .node/neo-cli/bin/Release/net5.0/Plugins
-        cp .modules/src/LevelDBStore/bin/Release/net5.0/LevelDBStore.dll .node/neo-cli/bin/Release/net5.0/Plugins/
-        cp .maintainer/status/bin/Release/net5.0/status.dll .node/neo-cli/bin/Release/net5.0/Plugins/
+        mkdir -p .node/neo-cli/bin/Release/net6.0/Plugins
+        cp .modules/src/LevelDBStore/bin/Release/net6.0/LevelDBStore.dll .node/neo-cli/bin/Release/net6.0/Plugins/
+        cp .maintainer/status/bin/Release/net6.0/status.dll .node/neo-cli/bin/Release/net6.0/Plugins/
     - name: Run
       env:
         AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
         AZURE_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_STORAGE_ACCESS_KEY }}
         UNTIL: ${{ github.event.inputs.UNTIL }}
-        NEONODE: './.node/neo-cli/bin/Release/net5.0/neo-cli'
+        NEONODE: './.node/neo-cli/bin/Release/net6.0/neo-cli'
       run: |
         go get github.com/Azure/azure-storage-blob-go/azblob
         go run app.go
