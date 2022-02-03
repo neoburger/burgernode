@@ -54,13 +54,13 @@ jobs:
     - name: Restore Neoburger Maintainer
       run: cd .maintainer && dotnet restore
     - name: Build Neo Node
-      run: cd .node/neo-cli && dotnet publish -c Release
+      run: cd .node/neo-cli && dotnet publish -c Release -r linux-x64 --self-contained true
     - name: Build Neo Modules
-      run: cd .modules/src/LevelDBStore && dotnet publish -c Release
+      run: cd .modules/src/LevelDBStore && dotnet publish -c Release -r linux-x64 --self-contained true
     - name: Build Neoburger Maintainer
       run: |
         cd .maintainer 
-        dotnet publish -c Release
+        dotnet publish -c Release -r linux-x64 --self-contained true
     - name: Install Plugins
       run: |
         mkdir -p .node/neo-cli/bin/Release/net6.0/Plugins
