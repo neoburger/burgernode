@@ -15,6 +15,6 @@ jobs:
       - name: Checkout latest code
         uses: actions/checkout@v2
       - name: Automatic Revert
-        uses: Hecate2/revert@v0.0.1
+        uses: Hecate2/revert@2695491daa07d8545af25c7f02af8e98ff61c6db
         env:
           GITHUB_TOKEN: ${{ secrets.HECATE2_GITHUB_TOKEN_FOR_BURGERNODE_REVERT }}
