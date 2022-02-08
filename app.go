@@ -46,16 +46,20 @@ func main() {
     if err != nil {
         log.Fatalln(err)
     }
+    log.Println("debug start")
     if len(os.Getenv("UNTIL")) == 0 {
+        log.Println("a")
         resp, err := http.Post("https://n3seed2.ngd.network:10332", "application/json", strings.NewReader(`{"jsonrpc":"2.0","method":"getblockcount","params":[],"id":1}`))
         if err != nil {
             log.Fatalln(err)
         }
         defer resp.Body.Close()
+        log.Println("b")
         s, err := ioutil.ReadAll(resp.Body)
         if err != nil {
             log.Fatalln(err)
         }
+        log.Println(string(s))
         v := make(map[string]interface{})
         if err := json.Unmarshal([]byte(s), &v); err != nil {
             log.Fatalln(err)
@@ -63,6 +67,7 @@ func main() {
         cmd.Env = append(cmd.Env, fmt.Sprintf("UNTIL=%v", v["result"]))
         log.Println(cmd.Env)
     }
+    log.Println(cmd.Env)
     if err := cmd.Start(); err != nil {
         log.Fatalln(err)
     }
