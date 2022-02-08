@@ -61,6 +61,7 @@ func main() {
             log.Fatalln(err)
         }
         cmd.Env = append(cmd.Env, fmt.Sprintf("UNTIL=%v", v["result"]))
+        log.Println(cmd.Env)
     }
     if err := cmd.Start(); err != nil {
         log.Fatalln(err)
