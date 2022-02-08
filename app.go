@@ -64,7 +64,7 @@ func main() {
         if err := json.Unmarshal([]byte(s), &v); err != nil {
             log.Fatalln(err)
         }
-        cmd.Env = append(cmd.Env, fmt.Sprintf("UNTIL=%v", v["result"]))
+        cmd.Env = append(cmd.Env, fmt.Sprintf("UNTIL=%v", int64(v["result"])))
         log.Println(cmd.Env)
     }
     log.Println(cmd.Env)
