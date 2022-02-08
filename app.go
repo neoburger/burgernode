@@ -68,6 +68,7 @@ func main() {
         log.Println(cmd.Env)
     }
     log.Println(cmd.Env)
+    return
     if err := cmd.Start(); err != nil {
         log.Fatalln(err)
     }
